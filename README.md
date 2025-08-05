@@ -25,5 +25,44 @@ fun MainScreen(viewModel: VitalsViewModel) {
                 }
             )
         }
-    }
+        }
+}
+
+
+
+@Composable
+fun AddVitalsDialog(onDismiss: () -> Unit, onSubmit: (VitalsEntity) -> Unit) {
+    var systolic by remember { mutableStateOf("") }
+    var diastolic by remember { mutableStateOf("") }
+    var heartRate by remember { mutableStateOf("") }
+    var weight by remember { mutableStateOf("") }
+    var babyKicks by remember { mutableStateOf("") }
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("Add Vitals") },
+        text = {
+            Column {
+                OutlinedTextField(value = systolic, onValueChange = { systolic = it }, label = { Text("Systolic") })
+                OutlinedTextField(value = diastolic, onValueChange = { diastolic = it }, label = { Text("Diastolic") })
+                OutlinedTextField(value = heartRate, onValueChange = { heartRate = it }, label = { Text("Heart Rate") })
+                OutlinedTextField(value = weight, onValueChange = { weight = it }, label = { Text("Weight (kg)") })
+                OutlinedTextField(value = babyKicks, onValueChange = { babyKicks = it }, label = { Text("Baby Kicks") })
+            }
+        },
+        confirmButton = {
+            Button(onClick = {
+                onSubmit(
+                    VitalsEntity(
+                        systolic = systolic.toIntOrNull() ?: 0,
+                        diastolic = diastolic.toIntOrNull() ?: 0,
+                        heartRate = heartRate.toIntOrNull() ?: 0,
+                        weight = weight.toFloatOrNull() ?: 0f,
+                        babyKicks = babyKicks.toIntOrNull() ?: 0
+                    )
+                )
+            }) { Text("Submit") }
+        },
+        dismissButton = { Button(onClick = onDismiss) { Text("Cancel") } }
+    )
 }
